@@ -1,4 +1,4 @@
-# CloudNav-Oorz（修改版）
+# Kennav（修改版）
 本项目基于
 https://github.com/sese972010/CloudNav-
 https://github.com/aabacada/CloudNav-abcd
@@ -16,7 +16,7 @@ https://github.com/aabacada/CloudNav-abcd
 
 </details>
 
-# CloudNav (云航) - 智能私有导航站
+# KenNav - 智能私有导航站
 
 <div align="center">
 
@@ -36,7 +36,7 @@ https://github.com/aabacada/CloudNav-abcd
 **一个现代化、基于 AI 辅助的全栈个人导航站。**
 **无需购买服务器，依托 Cloudflare 免费额度托管（注意 KV 有写入频率与用量限制，多端数据为最终一致性同步）。**
 
-[在线演示](https://oorz.org/) • [功能特性](#-核心功能) • [项目展示](#-项目展示) • [部署教程](#-部署教程-免费) • [使用指南](#-使用指南)
+ [功能特性](#-核心功能) • [项目展示](#-项目展示) • [部署教程](#-部署教程-免费) • [使用指南](#-使用指南)
 
 </div>
 
