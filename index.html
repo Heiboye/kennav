@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="https://lucide.dev/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title></title>
+    <script>
+      (function () {
+        function applyRoundedFavicon(source) {
+          if (!source) return;
+          const img = new Image();
+          img.crossOrigin = 'anonymous';
+          img.onload = function () {
+            try {
+              var size = 64;
+              var radius = 14;
+              var canvas = document.createElement('canvas');
+              canvas.width = size;
+              canvas.height = size;
+              var ctx = canvas.getContext('2d');
+              if (!ctx) return;
+
+              ctx.beginPath();
+              ctx.moveTo(radius, 0);
+              ctx.lineTo(size - radius, 0);
+              ctx.quadraticCurveTo(size, 0, size, radius);
+              ctx.lineTo(size, size - radius);
+              ctx.quadraticCurveTo(size, size, size - radius, size);
+              ctx.lineTo(radius, size);
+              ctx.quadraticCurveTo(0, size, 0, size - radius);
+              ctx.lineTo(0, radius);
+              ctx.quadraticCurveTo(0, 0, radius, 0);
+              ctx.closePath();
+              ctx.clip();
+              ctx.drawImage(img, 0, 0, size, size);
+
+              var favicon = document.querySelector('link[rel="icon"]');
+              if (favicon) {
+                favicon.href = canvas.toDataURL('image/png');
+              }
+            } catch (e) {}
+          };
+          img.onerror = function () {
+            var favicon = document.querySelector('link[rel="icon"]');
+            if (favicon) {
+              favicon.href = source;
+            }
+          };
+          img.src = source;
+        }
+
+        // 应用站点设置（标题 + 圆角 favicon）；有缓存立即生效，无缓存则异步拉取（不阻塞首屏渲染）
+        function applySiteSettings(settings) {
+          if (!settings) return;
+          if (settings.title) document.title = settings.title;
+          if (settings.favicon) applyRoundedFavicon(settings.favicon);
+        }
+
+        try {
+          const saved = localStorage.getItem('cloudnav_site_settings');
+          const settings = saved ? JSON.parse(saved) : null;
+
+          if (settings) {
+            applySiteSettings(settings);
+          } else {
+            // 异步请求，避免同步 XHR 阻塞首屏；失败时静默降级（React 挂载后会自行加载配置）
+            fetch('/api/storage?getConfig=website')
+              .then(function (res) {
+                return res.ok ? res.json() : null;
+              })
+              .then(function (data) {
+                if (data) {
+                  localStorage.setItem('cloudnav_site_settings', JSON.stringify(data));
+                  applySiteSettings(data);
+                }
+              })
+              .catch(function () {});
+          }
+        } catch (e) {}
+      })();
+    </script>
+    <style>
+      /* 预留滚动条空间：展开工具面板时页面出现/消失垂直滚动条不再引起内容区宽度变化（卡片不位移） */
+      html {
+        scrollbar-gutter: stable;
+      }
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      }
+      /* Custom scrollbar for sidebar */
+      .scrollbar-hide::-webkit-scrollbar {
+          display: none;
+      }
+      .scrollbar-hide {
+          -ms-overflow-style: none;
+          scrollbar-width: none;
+      }
+      /* Simple CSS-only tooltip transition */
+      .tooltip-custom {
+          transition: opacity 0.2s, visibility 0.2s;
+          pointer-events: none;
+      }
+    </style>
+  <script type="importmap">
+{
+  "imports": {
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
+    "lucide-react": "https://aistudiocdn.com/lucide-react@^0.554.0",
+    "react/": "https://aistudiocdn.com/react@^19.2.0/",
+    "react": "https://aistudiocdn.com/react@^19.2.0",
+    "uuid": "https://aistudiocdn.com/uuid@^13.0.0",
+    "@google/genai": "https://aistudiocdn.com/@google/genai@^1.30.0",
+    "buffer": "https://aistudiocdn.com/buffer@^6.0.3"
+  }
+}
+</script>
+</head>
+  <body class="bg-gray-50 dark:bg-slate-900 text-slate-900 dark:text-slate-50 transition-colors duration-300">
+    <div id="root"></div>
+  <script type="module" src="/index.tsx"></script>
+</body>
+</html>
